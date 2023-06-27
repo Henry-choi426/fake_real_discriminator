@@ -114,7 +114,7 @@ if __name__ == '__main__':
     '''
     # Optimizer
     optimizer = get_optimizer(optimizer_name=config['TRAINER']['optimizer'])
-    optimizer = optimizer(params=model.parameters(),lr=config['TRAINER']['learning_rate'])
+    optimizer = optimizer(params = filter(lambda p: p.requires_grad, model.parameters()), lr=config['TRAINER']['learning_rate'])
 
     # Loss
     loss = get_loss(loss_name=config['TRAINER']['loss'])

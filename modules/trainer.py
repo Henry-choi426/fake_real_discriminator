@@ -77,9 +77,8 @@ class Trainer():
             score = metric_func(self.y, self.y_preds)
             self.score_dict[metric_name] = score
             # Scheduler update 
-            if mode == 'train' and metric_name == 'accuracy':
+            if mode == 'val' and metric_name == 'accuracy':
                 self.scheduler.step(score)
-
         
         # Elapsed time
         end_timestamp = time()

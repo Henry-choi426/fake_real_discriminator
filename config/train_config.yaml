@@ -3,7 +3,7 @@ DIRECTORY:
   #{DATA_DIR}/train
 
 TRAINER :
-  model: vit
+  model: denov2
   optimizer: adam
   learning_rate: 5.0e-4
   loss: bce
@@ -17,6 +17,7 @@ TRAINER :
   amp: False
   gpu: 0
   seed: 42
+  
 
 MODEL:
   effnet:
@@ -27,12 +28,17 @@ MODEL:
     backbone: vit_large_patch14_clip_224.openai_ft_in12k_in1k
     n_out: 1
     is_sigmoid: True
+  denov2:
+    backbone: vit_base_patch14_dinov2.lvd142m
+    n_out: 1
+    is_sigmoid: True
+    freeze_ratio: 0.79
 
 DATASET:
-  val_size : 0.2
+  val_size : 0.999
 
 DATALOADER:
-  batch_size: 12
+  batch_size: 4
   num_workers: 0
   shuffle: True
   pin_memory: True

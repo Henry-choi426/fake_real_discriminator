@@ -26,7 +26,7 @@ class CustomDataset(Dataset):
         self.y = y
         self.transforms = transforms.Compose([
             transforms.ToTensor(),
-            transforms.Resize((224, 224)),
+            transforms.Resize((518, 518)),
             transforms.Normalize([0.485, 0.456,0.406],[0.229,0.224,0.225])
         ])
 
@@ -50,7 +50,7 @@ class TestDataset(Dataset):
         self.X = X
         self.transforms = transforms.Compose([
             transforms.ToTensor(),
-            transforms.Resize((224, 224)),
+            transforms.Resize((518, 518)),
             transforms.Normalize([0.485, 0.456,0.406],[0.229,0.224,0.225])
         ])
 
