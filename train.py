@@ -125,7 +125,7 @@ if __name__ == '__main__':
     optimizer = optimizer(params = filter(lambda p: p.requires_grad, model.parameters()), lr=config['TRAINER']['learning_rate'])
 
     # Loss
-    loss = get_loss(loss_name=config['TRAINER']['loss'])
+    loss = get_loss(loss_name=config['TRAINER']['loss'], amp=config['TRAINER']['amp'])
     
     # Metric
     metrics = {metric_name: get_metric(metric_name) for metric_name in config['TRAINER']['metric']}
@@ -137,9 +137,8 @@ if __name__ == '__main__':
 
     # AMP
     if config['TRAINER']['amp'] == True:
-        from apex import amp
-        model, optimizer = amp.initialize(model, optimizer, opt_level='O1')
-
+        import torch.cuda.amp as amp
+        scaler = amp.GradScaler()
 
     # Trainer
     trainer = Trainer(model=model,
@@ -148,7 +147,7 @@ if __name__ == '__main__':
                       metrics=metrics,
                       device=device,
                       logger=logger,
-                      amp=amp if config['TRAINER']['amp'] else None,
+                      amp=scaler if config['TRAINER']['amp'] else None,
                       interval=config['LOGGER']['logging_interval'])
     
     '''

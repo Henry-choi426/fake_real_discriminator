@@ -11,7 +11,7 @@ class Trainer():
         self.metrics = metrics
         self.device = device
         self.logger = logger
-        self.scaler = amp
+        self.amp = amp
         self.interval = interval
         self.scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(self.optimizer, mode='max', factor=0.1, patience=0, verbose = 1)
         
@@ -31,43 +31,28 @@ class Trainer():
         for batch_index, (x,y, filename) in enumerate(tqdm(dataloader)):
             x,y = x.to(self.device, dtype=torch.float), y.to(self.device, dtype=torch.float32)
             # Inference
-            self.optimizer.zero_grad()
-
-            if self.scaler:
-                import torch.cuda.amp as amp
-                with amp.autocast():
-                    y_pred = self.model(x)
-                    y_pred = y_pred.squeeze(-1)
-
-                    # Loss
-                    loss = self.loss(y_pred, y)
-
-                    # Update
-                    if mode == 'train':
-                        self.scaler.scale(loss).backward()
-                        self.scaler.step(self.optimizer)
-                        self.scaler.update()
-
-                    elif mode in ['val','test']:
-                        pass
-                    else:
-                        raise ValueError('Mode should be either train, val, or test')
-            else:
-                y_pred = self.model(x)
-                y_pred = y_pred.squeeze(-1)
-
-                # Loss
-                loss = self.loss(y_pred, y)
-
-                # Update
-                if mode == 'train':
+            y_pred = self.model(x)
+            y_pred = y_pred.squeeze(-1)
+            # Loss
+            loss = self.loss(y_pred, y)
+            
+            # Update
+            if mode == 'train':
+                self.optimizer.zero_grad()
+                
+                if self.amp is None:
                     loss.backward()
-                    self.optimizer.step()
-
-                elif mode in ['val','test']:
-                    pass
+                
                 else:
-                    raise ValueError('Mode should be either train, val, or test')
+                    with self.amp.scale_loss(loss, self.optimizer) as scaled_loss:
+                        scaled_loss.backward()
+                    
+                self.optimizer.step()
+            
+            elif mode in ['val','test']:
+                pass
+            else:
+                raise ValueError('Mode should be either train, val, or test')
             
             # History
             #self.filenames += filename

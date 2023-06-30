@@ -14,11 +14,11 @@ TRAINER :
   early_stopping_target: val_accuracy
   early_stopping_patience: 2
   early_stopping_mode: max
-  amp: False
+  amp: True
   gpu: 0
   seed: 42
   check_point: '20230629_161743'
-  
+
 MODEL:
   effnet:
     backbone: efficientnet_b0
@@ -33,12 +33,12 @@ MODEL:
     n_out: 1
     is_sigmoid: True
     freeze_ratio: 0.913
-
+#  freeze_ratio: 0.79
 DATASET:
-  val_size : 0.1
+  val_size : 0.999
 
 DATALOADER:
-  batch_size: 32
+  batch_size: 48
   num_workers: 0
   shuffle: True
   pin_memory: True
