@@ -7,8 +7,8 @@ from sklearn.model_selection import train_test_split
 import cv2
 
 def SplitDataset(img_dir:str, val_size:float=0.1, seed=42):
-    fake_images = glob(f'{img_dir}/fake_images/*.png')
-    real_images = glob(f'{img_dir}/real_images/*.png')
+    fake_images = glob(f'./{img_dir}/fake_images/*')[:350000]
+    real_images = glob(f'./{img_dir}/real_images/*')[:350000]
     labels = [1] * len(fake_images) + [0] * len(real_images)
 
     X_train, X_val, y_train, y_val = train_test_split(fake_images + real_images, labels, test_size=val_size, random_state=seed, shuffle=True)

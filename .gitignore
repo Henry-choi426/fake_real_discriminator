@@ -3,7 +3,9 @@ data/
 train/
 test/
 results/
+archive/
 *.pth
+*.csv
 
 ### JupyterNotebooks ###
 # gitignore template for Jupyter Notebooks

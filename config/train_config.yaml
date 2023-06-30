@@ -17,8 +17,8 @@ TRAINER :
   amp: False
   gpu: 0
   seed: 42
+  check_point: '20230629_161743'
   
-
 MODEL:
   effnet:
     backbone: efficientnet_b0
@@ -29,16 +29,16 @@ MODEL:
     n_out: 1
     is_sigmoid: True
   denov2:
-    backbone: vit_base_patch14_dinov2.lvd142m
+    backbone: vit_large_patch14_dinov2.lvd142m
     n_out: 1
     is_sigmoid: True
-    freeze_ratio: 0.79
+    freeze_ratio: 0.913
 
 DATASET:
-  val_size : 0.999
+  val_size : 0.1
 
 DATALOADER:
-  batch_size: 4
+  batch_size: 32
   num_workers: 0
   shuffle: True
   pin_memory: True

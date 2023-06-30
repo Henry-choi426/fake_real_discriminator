@@ -33,6 +33,9 @@ config = load_yaml(config_path)
 kst = timezone(timedelta(hours=9))
 train_serial = datetime.now(tz=kst).strftime("%Y%m%d_%H%M%S")
 
+if config['TRAINER']['check_point']:
+    CKP_DIR = os.path.join(PROJECT_DIR, 'results', 'train', config['TRAINER']['check_point'])
+
 # Recorder Directory
 if config['LOGGER']['debug']:
     RECORDER_DIR = os.path.join(PROJECT_DIR, 'results', 'train', 'debug')
@@ -108,7 +111,12 @@ if __name__ == '__main__':
     model_name = config['TRAINER']['model']
     model_args = config['MODEL'][model_name]
     model = get_model(model_name = model_name, model_args = model_args).to(device)
-    
+
+    if config['TRAINER']['check_point']:
+        print('model Load:', os.path.join(CKP_DIR, 'model.pt'))
+        checkpoint = torch.load(os.path.join(CKP_DIR, 'model.pt'))
+        model.load_state_dict(checkpoint['model'])
+
     '''
     Set trainer
     '''
