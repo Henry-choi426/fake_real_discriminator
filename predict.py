@@ -55,7 +55,7 @@ if __name__ == '__main__':
     # Load data
     X_test = glob(f'{DATA_DIR}/*.png')
     test_dataset = TestDataset(X = X_test)
-    
+    print('batch_size:',train_config['DATALOADER']['batch_size'],)
     test_dataloader = DataLoader(dataset=test_dataset,
                                 batch_size=train_config['DATALOADER']['batch_size'],
                                 num_workers=train_config['DATALOADER']['num_workers'], 
@@ -77,10 +77,11 @@ if __name__ == '__main__':
     y_preds = []
     filenames = []
     for batch_index, (x, filename) in enumerate(tqdm(test_dataloader)):
-        x = x.to(device, dtype=torch.float)
-        y_logits = model(x).squeeze(-1)
-        y_pred = (y_logits > 0.5).to(torch.int).cpu()
-        y_preds.append(y_pred)
+        with torch.no_grad():
+            x = x.to(device, dtype=torch.float)
+            y_logits = model(x).squeeze(-1)
+            y_pred = (y_logits > 0.5).to(torch.int).cpu()
+            y_preds.append(y_pred)
         filenames.extend(filename)
     y_preds = torch.cat(y_preds, dim=0).tolist()
 

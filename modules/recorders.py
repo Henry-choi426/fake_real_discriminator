@@ -58,7 +58,7 @@ class Recorder():
                 'model': self.model.state_dict(),
                 'optimizer': self.optimizer.state_dict(),
                 'scheduler': self.scheduler.state_dict() if self.scheduler else None,
-                'amp': self.amp.state_dict()
+                # 'amp': self.amp.state_dict()
             }
         else:
             check_point = {

@@ -188,13 +188,12 @@ if __name__ == '__main__':
         for metric_str, score in trainer.score_dict.items():
             row_dict[f"train_{metric_str}"] = score
         trainer.clear_history()
-        gc.collect()
-        torch.cuda.empty_cache()
+        
         """
         Validation
         """
         print(f"Val {epoch_index}/{n_epochs}")
-        logger.info(f"--Val {epoch_index}/{n_epochs}")  
+        logger.info(f"--Val {epoch_index}/{n_epochs}")
         trainer.train(dataloader=val_dataloader, epoch_index=epoch_index, mode='val')
         
         row_dict['val_loss'] = trainer.loss_mean
@@ -203,8 +202,7 @@ if __name__ == '__main__':
         for metric_str, score in trainer.score_dict.items():
             row_dict[f"val_{metric_str}"] = score
         trainer.clear_history()
-        gc.collect()
-        torch.cuda.empty_cache()
+        
         """
         Record
         """

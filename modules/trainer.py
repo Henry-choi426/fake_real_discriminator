@@ -1,4 +1,4 @@
-import torch
+import torch, gc
 from time import time
 from tqdm import tqdm
 
@@ -25,6 +25,8 @@ class Trainer():
         self.elapsed_time = 0
         
     def train(self, mode, dataloader, epoch_index=0):
+        gc.collect()
+        torch.cuda.empty_cache()
         start_timestamp = time()
         self.model.train() if mode == 'train' else self.model.eval()
         
@@ -52,22 +54,22 @@ class Trainer():
                         pass
                     else:
                         raise ValueError('Mode should be either train, val, or test')
-            else:
+            elif mode == 'train':
                 y_pred = self.model(x)
                 y_pred = y_pred.squeeze(-1)
 
                 # Loss
                 loss = self.loss(y_pred, y)
+                loss.backward()
+                self.optimizer.step()
 
-                # Update
-                if mode == 'train':
-                    loss.backward()
-                    self.optimizer.step()
-
-                elif mode in ['val','test']:
-                    pass
-                else:
-                    raise ValueError('Mode should be either train, val, or test')
+            elif mode in ['val','test']:
+                with torch.no_grad():
+                    y_pred = self.model(x)
+                    y_pred = y_pred.squeeze(-1)
+                    loss = self.loss(y_pred, y)
+            else:
+                raise ValueError('Mode should be either train, val, or test')
             
             # History
             #self.filenames += filename

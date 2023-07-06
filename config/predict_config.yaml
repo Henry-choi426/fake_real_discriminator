@@ -3,8 +3,8 @@ DIRECTORY:
   sample_submission_path : test/sample_submission.csv
 
 TRAIN:
-  train_serial: '20230629_161743'
-  batch_size: 16
+  train_serial: '20230705_190111'
+  batch_size: 128
 
 PREDICT:
   seed: 42

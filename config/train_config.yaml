@@ -5,7 +5,7 @@ DIRECTORY:
 TRAINER :
   model: denov2
   optimizer: adam
-  learning_rate: 5.0e-4
+  learning_rate: 5.0e-5
   loss: bce
   metric:
     - accuracy
@@ -14,10 +14,10 @@ TRAINER :
   early_stopping_target: val_accuracy
   early_stopping_patience: 2
   early_stopping_mode: max
-  amp: True
+  amp: False
   gpu: 0
   seed: 42
-  check_point: '20230629_161743'
+  check_point: '20230703_180404'
 
 MODEL:
   effnet:
@@ -32,13 +32,13 @@ MODEL:
     backbone: vit_large_patch14_dinov2.lvd142m
     n_out: 1
     is_sigmoid: True
+    # freeze_ratio: 0.79
     freeze_ratio: 0.913
-#  freeze_ratio: 0.79
 DATASET:
-  val_size : 0.999
+  val_size : 0.1
 
 DATALOADER:
-  batch_size: 48
+  batch_size: 16
   num_workers: 0
   shuffle: True
   pin_memory: True
